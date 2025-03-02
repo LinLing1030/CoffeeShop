@@ -2,7 +2,7 @@ pipeline {
     agent any  
 
     environment {
-        MAVEN_HOME = "E:/apache-maven-3.9.9"  // Maven 
+        MAVEN_HOME = "E:/apache-maven-3.9.9"  // Windows 需要用 / 或者 \\
         SONAR_HOST_URL = "http://localhost:9000"  
     }
 
@@ -15,19 +15,19 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package'
+                bat '"%MAVEN_HOME%/bin/mvn" clean package'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                sh 'mvn test'
+                bat '"%MAVEN_HOME%/bin/mvn" test'
             }
         }
 
         stage('Static Code Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL'
+                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL%'
             }
         }
 
@@ -40,7 +40,7 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Deploying application...'
-                // 假设是简单的输出，你可以修改为真实部署
+                // 
             }
         }
     }
