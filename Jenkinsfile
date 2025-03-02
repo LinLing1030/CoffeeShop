@@ -2,8 +2,9 @@ pipeline {
     agent any  
 
     environment {
-        MAVEN_HOME = "E:/apache-maven-3.9.9"  // Windows 需要用 / 或者 \\
+        MAVEN_HOME = "E:/apache-maven-3.9.9"  
         SONAR_HOST_URL = "http://localhost:9000"  
+        SONAR_TOKEN = credentials('sonar_token')  // 使用 Jenkins 凭据
     }
 
     stages {
@@ -27,7 +28,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL%'
+                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN%'
             }
         }
 
@@ -40,7 +41,6 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Deploying application...'
-                // 
             }
         }
     }
