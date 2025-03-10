@@ -6,9 +6,9 @@ pipeline {
         SONAR_HOST_URL = "http://localhost:9000"  
         SONAR_TOKEN = credentials('sonar_token') 
     }
-    triggers {
-        pollSCM(*/5 * * * *)}
-        // githubPush()
+    //triggers {
+    //    pollSCM(*/5 * * * *)
+    //    }
         
     stages {
         stage('Clone Repository') {
