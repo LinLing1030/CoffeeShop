@@ -6,7 +6,10 @@ pipeline {
         SONAR_HOST_URL = "http://localhost:9000"  
         SONAR_TOKEN = credentials('sonar_token')  // 使用 Jenkins 凭据
     }
-
+    triggers {
+        pollSCM('H/5 * * * *')// githubPush()
+        
+    }
     stages {
         stage('Clone Repository') {
             steps {
