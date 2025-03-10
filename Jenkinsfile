@@ -4,10 +4,10 @@ pipeline {
     environment {
         MAVEN_HOME = "E:/apache-maven-3.9.9"  
         SONAR_HOST_URL = "http://localhost:9000"  
-        SONAR_TOKEN = credentials('sonar_token')  // 使用 Jenkins 凭据
+        SONAR_TOKEN = credentials('sonar_token') 
     }
     triggers {
-        pollSCM('H/5 * * * *')// githubPush()
+        pollSCM(*/5 * * * *)// githubPush()
         
     }
     stages {
