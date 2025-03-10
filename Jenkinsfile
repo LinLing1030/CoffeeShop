@@ -7,9 +7,9 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_token') 
     }
     triggers {
-        pollSCM(*/5 * * * *)
+        pollSCM(*/5 * * * *)}
         // githubPush()
-    }
+        
     stages {
         stage('Clone Repository') {
             steps {
