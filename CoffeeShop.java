@@ -1,66 +1,75 @@
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class CoffeeShop {
     public static void main(String[] args) {
-        // 创建 Scanner 对象
         Scanner scanner = new Scanner(System.in);
-        double totalAmount = 0; // 总金额
+        double totalAmount = 0;
+        int totalCups = 0;
 
-        // 获取当前日期（只显示年月日）
         String currentDate = LocalDate.now().toString();
         System.out.println("Input " + currentDate + " stock");
 
-        // 让用户输入库存（模拟）
-        System.out.println("Americano:");
-        scanner.nextInt();
-        System.out.println("Mocha:");
-        scanner.nextInt();
-        System.out.println("Ice Tea:");
-        scanner.nextInt();
+        Map<String, Integer> stock = new HashMap<>();
+        stock.put("Americano", getStockInput(scanner, "Americano"));
+        stock.put("Mocha", getStockInput(scanner, "Mocha"));
+        stock.put("Ice Tea", getStockInput(scanner, "Ice Tea"));
 
-        System.out.println("Welcome shop");
+        Map<String, Integer> purchased = new HashMap<>();
+        Map<String, Double> priceMap = new HashMap<>();
+        priceMap.put("Americano", 3.5);
+        priceMap.put("Mocha", 4.0);
+        priceMap.put("Ice Tea", 2.5);
 
-        // 购物循环
+        System.out.println("Welcome to the shop!");
+
         boolean shopping = true;
         while (shopping) {
-            // 显示菜单
             System.out.println("Which coffee do you want?");
-            System.out.println("1. Americano - $3.5");
-            System.out.println("2. Mocha - $4.0");
-            System.out.println("3. Ice Tea - $2.5");
+            System.out.println("1. Americano - €3.5");
+            System.out.println("2. Mocha - €4.0");
+            System.out.println("3. Ice Tea - €2.5");
 
-            // 读取用户输入
             String choice = scanner.next();
-            String selectedCoffee = "";
-            double price = 0.0;
+            String selectedCoffee = null;
 
-            // 使用 if-else 判断
-            if (choice.equalsIgnoreCase("1") || choice.equalsIgnoreCase("Americano")) {
-                selectedCoffee = "Americano";
-                price = 3.5;
-            } else if (choice.equalsIgnoreCase("2") || choice.equalsIgnoreCase("Mocha")) {
-                selectedCoffee = "Mocha";
-                price = 4.0;
-            } else if (choice.equalsIgnoreCase("3") || choice.equalsIgnoreCase("Ice Tea")) {
-                selectedCoffee = "Ice Tea";
-                price = 2.5;
-            } else {
-                System.out.println("Invalid choice. Please try again.");
+            switch (choice.toLowerCase()) {
+                case "1":
+                case "americano":
+                    selectedCoffee = "Americano";
+                    break;
+                case "2":
+                case "mocha":
+                    selectedCoffee = "Mocha";
+                    break;
+                case "3":
+                case "ice tea":
+                    selectedCoffee = "Ice Tea";
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    continue;
+            }
+
+            System.out.println("How many cups?");
+            int quantity = getValidIntInput(scanner);
+
+            if (stock.get(selectedCoffee) < quantity) {
+                System.out.println("Not enough stock! Available: " + stock.get(selectedCoffee));
                 continue;
             }
 
-            // 询问杯数
-            System.out.println("How many cups?");
-            int quantity = scanner.nextInt();
-
-            // 计算价格
-            double subtotal = price * quantity;
+            double subtotal = calculateTotalAmount(priceMap.get(selectedCoffee), quantity);
             totalAmount += subtotal;
+            totalCups += quantity;
+            stock.put(selectedCoffee, stock.get(selectedCoffee) - quantity);
 
-            System.out.println("Added: " + quantity + " cups of " + selectedCoffee + " - $" + subtotal);
+            purchased.put(selectedCoffee, purchased.getOrDefault(selectedCoffee, 0) + quantity);
 
-            // 询问是否继续购物
+            System.out.println("Added: " + quantity + " cups of " + selectedCoffee + " - €" + subtotal);
+
             while (true) {
                 System.out.println("Do you want to finish shopping? (y/n)");
                 String finish = scanner.next();
@@ -68,16 +77,64 @@ public class CoffeeShop {
                     shopping = false;
                     break;
                 } else if (finish.equalsIgnoreCase("n")) {
-                    break; // 继续购物，重新显示菜单
+                    break;
                 } else {
                     System.out.println("Invalid input. Please enter 'y' or 'n'.");
                 }
             }
         }
 
-        // 输出总金额
-        System.out.println("Total amount: $" + totalAmount);
+        System.out.println("\nReceipt:");
+        for (Map.Entry<String, Integer> entry : purchased.entrySet()) {
+            String coffee = entry.getKey();
+            int quantity = entry.getValue();
+            double coffeeTotal = priceMap.get(coffee) * quantity;
+            System.out.println(coffee + " * " + quantity + " cups -- €" + coffeeTotal);
+        }
+        System.out.println("Total Cups: " + totalCups);
+        System.out.println("Total Amount: €" + totalAmount);
         System.out.println("Thank you for shopping!");
         scanner.close();
+    }
+
+    public static double calculateTotalAmount(double price, int quantity) {
+        return price * quantity;
+    }
+
+    private static int getStockInput(Scanner scanner, String coffeeType) {
+        int stock;
+        while (true) {
+            System.out.println(coffeeType + ":");
+            try {
+                stock = scanner.nextInt();
+                if (stock >= 0) {
+                    break;
+                } else {
+                    System.out.println("Stock cannot be negative. Please enter again.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                scanner.next();
+            }
+        }
+        return stock;
+    }
+
+    private static int getValidIntInput(Scanner scanner) {
+        int value;
+        while (true) {
+            try {
+                value = scanner.nextInt();
+                if (value > 0) {
+                    break;
+                } else {
+                    System.out.println("Please enter a valid positive number.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                scanner.next();
+            }
+        }
+        return value;
     }
 }
