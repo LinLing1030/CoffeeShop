@@ -94,7 +94,7 @@ public class CoffeeShop {
     }
 
    
-    private static double calculateTotalAmount(double price, int quantity) {
+    public static double calculateTotalAmount(double price, int quantity) {
         return price * quantity;
     }
 
