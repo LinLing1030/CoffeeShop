@@ -36,11 +36,11 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
-            steps {
-                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=${SONAR_TOKEN}'
-            }
-        }
+       stage('Static Code Analysis') {
+           steps {
+               bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN%'
+    }
+}
 
         stage('Archive Artifacts') {
             steps {
