@@ -7,10 +7,6 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_token') 
     }
 
-    //triggers {
-    //    pollSCM('H/10 * * * *') 
-    //}
-
     stages {
         stage('Clean Workspace') {
             steps {
@@ -30,17 +26,17 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Run Unit Tests & Coverage') {
             steps {
-                bat '"%MAVEN_HOME%/bin/mvn" test'
+                bat '"%MAVEN_HOME%/bin/mvn" verify'
             }
         }
 
-       stage('Static Code Analysis') {
-           steps {
-               bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN%'
-    }
-}
+        stage('Static Code Analysis') {
+            steps {
+                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN% -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml'
+            }
+        }
 
         stage('Archive Artifacts') {
             steps {
