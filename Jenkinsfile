@@ -6,11 +6,18 @@ pipeline {
         SONAR_HOST_URL = "http://localhost:9000"  
         SONAR_TOKEN = credentials('sonar_token') 
     }
+
     //triggers {
-    //    pollSCM(*/5 * * * *)
-    //    }
-        
+    //    pollSCM('H/10 * * * *') 
+    //}
+
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() 
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 git branch: 'maven', url: 'https://github.com/LinLing1030/CoffeeShop.git'
@@ -31,7 +38,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN%'
+                bat '"%MAVEN_HOME%/bin/mvn" sonar:sonar -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=${SONAR_TOKEN}'
             }
         }
 
