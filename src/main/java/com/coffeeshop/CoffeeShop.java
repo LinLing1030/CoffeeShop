@@ -13,7 +13,6 @@ public class CoffeeShop {
         Scanner scanner = new Scanner(System.in);
         double totalAmount = 0;
 
-        
         String currentDate = LocalDate.now().toString();
         LOGGER.info("Input " + currentDate + " stock");
 
@@ -27,7 +26,6 @@ public class CoffeeShop {
 
         boolean shopping = true;
         while (shopping) {
-            
             LOGGER.info("Which coffee do you want?");
             LOGGER.info("1. Americano - $3.5");
             LOGGER.info("2. Mocha - $4.0");
@@ -69,7 +67,7 @@ public class CoffeeShop {
             }
 
             
-            double subtotal = price * quantity;
+            double subtotal = calculateTotalAmount(price, quantity);
             totalAmount += subtotal;
             stock.put(selectedCoffee, stock.get(selectedCoffee) - quantity);
 
@@ -90,13 +88,17 @@ public class CoffeeShop {
             }
         }
 
-        
         LOGGER.info("Total amount: $" + totalAmount);
         LOGGER.info("Thank you for shopping!");
         scanner.close();
     }
 
-    
+   
+    private static double calculateTotalAmount(double price, int quantity) {
+        return price * quantity;
+    }
+
+   
     private static int getStockInput(Scanner scanner, String coffeeType) {
         int stock;
         while (true) {
@@ -116,7 +118,7 @@ public class CoffeeShop {
         return stock;
     }
 
-    
+   
     private static int getValidIntInput(Scanner scanner) {
         int value;
         while (true) {
