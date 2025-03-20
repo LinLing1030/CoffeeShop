@@ -39,14 +39,15 @@ public class CoffeeShopTest extends TestCase {
      * Test user input simulation
      */
     public void testUserInput() {
-        String simulatedInput = "1\n2\n3\ny\n"; 
-        InputStream originalSystemIn = System.in;
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+    String simulatedInput = "10\n10\n10\n1\n2\ny\n";  
+    InputStream originalSystemIn = System.in;
+    System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
-        try {
-            CoffeeShop.main(new String[]{});
-        } finally {
-            System.setIn(originalSystemIn); 
-        }
+    try {
+        CoffeeShop.main(new String[]{});
+    } finally {
+        System.setIn(originalSystemIn);
     }
+}
+
 }
