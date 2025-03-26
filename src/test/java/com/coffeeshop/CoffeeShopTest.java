@@ -49,7 +49,7 @@ public class CoffeeShopTest extends TestCase {
      * Test user quitting without purchasing
      */
     public void testUserQuitsImmediately() {
-        String simulatedInput = "10\n10\n10\n4\nn\n";
+    	String simulatedInput = "10\n10\n10\n4\n1\n1\ny\n"; 
         simulateInputAndRun(simulatedInput);
     }
 
