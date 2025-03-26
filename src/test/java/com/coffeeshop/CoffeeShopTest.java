@@ -50,9 +50,12 @@ public class CoffeeShopTest extends TestCase {
         simulateInputAndRun(simulatedInput);
     }
 
-    //Simulates user attempting to buy more coffee than stock allows.
+    /**
+     * Simulates user attempting to buy more than stock allows,
+     * then reselecting valid quantity and quitting.
+     */
     public void testBuyTooMuchCoffee() {
-        String simulatedInput = "10\n10\n10\n1\n99\ny\n";
+        String simulatedInput = "10\n10\n10\n1\n99\n1\n2\ny\n";
         simulateInputAndRun(simulatedInput);
     }
 
