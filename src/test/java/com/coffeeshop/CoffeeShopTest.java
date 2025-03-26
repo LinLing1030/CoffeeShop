@@ -36,13 +36,7 @@ public class CoffeeShopTest extends TestCase {
      * Simulate a basic shopping flow with one item and checkout.
      */
     public void testUserInputBasicFlow() {
-        String input = "10
-10
-10
-1
-2
-y
-";
+        String input = "10\n10\n10\n1\n2\ny\n";
         simulateInputAndRun(input);
     }
 
@@ -50,12 +44,7 @@ y
      * Simulate quitting without purchasing.
      */
     public void testUserQuits() {
-        String input = "10
-10
-10
-4
-n
-";
+        String input = "10\n10\n10\n4\nn\n";
         simulateInputAndRun(input);
     }
 
@@ -63,19 +52,7 @@ n
      * Simulate multiple purchases in a single session.
      */
     public void testMultipleOrders() {
-        String input = "10
-10
-10
-1
-1
-y
-2
-2
-y
-3
-1
-n
-";
+        String input = "10\n10\n10\n1\n1\ny\n2\n2\ny\n3\n1\nn\n";
         simulateInputAndRun(input);
     }
 
@@ -83,9 +60,7 @@ n
      * Test getStockInput method with negative number then valid input.
      */
     public void testGetStockInputWithNegativeNumberThenValid() {
-        String input = "-5
-10
-";
+        String input = "-5\n10\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         int stock = CoffeeShop.getStockInput(scanner, "Americano");
@@ -96,9 +71,7 @@ n
      * Test getStockInput with invalid string then valid input.
      */
     public void testGetStockInputWithInvalidStringThenValid() {
-        String input = "abc
-15
-";
+        String input = "abc\n15\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         int stock = CoffeeShop.getStockInput(scanner, "Mocha");
@@ -109,9 +82,7 @@ n
      * Test getValidIntInput with 0 then valid input.
      */
     public void testGetValidIntInputWithZeroThenValid() {
-        String input = "0
-2
-";
+        String input = "0\n2\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         int result = CoffeeShop.getValidIntInput(scanner);
@@ -122,9 +93,7 @@ n
      * Test getValidIntInput with invalid string then valid input.
      */
     public void testGetValidIntInputWithInvalidStringThenValid() {
-        String input = "xyz
-3
-";
+        String input = "xyz\n3\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
         int result = CoffeeShop.getValidIntInput(scanner);
