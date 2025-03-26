@@ -6,7 +6,8 @@ import junit.framework.TestSuite;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Scanner;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 /**
  * Unit test for CoffeeShop.
@@ -49,7 +50,7 @@ public class CoffeeShopTest extends TestCase {
      * Test user quitting without purchasing
      */
     public void testUserQuitsImmediately() {
-    	String simulatedInput = "10\n10\n10\n4\n1\n1\ny\n"; 
+        String simulatedInput = "10\n10\n10\n4\n1\n1\ny\n"; 
         simulateInputAndRun(simulatedInput);
     }
 
@@ -62,15 +63,46 @@ public class CoffeeShopTest extends TestCase {
     }
 
     /**
+     * Test buying more than available stock (to cover "Not enough stock" branch)
+     */
+    public void testBuyTooMuchCoffee() {
+        String simulatedInput = "1\n100\ny\n";
+        simulateInputAndRun(simulatedInput);
+    }
+
+    /**
+     * Test invalid input (to cover else branch inside while loop)
+     */
+    public void testInvalidInputHandling() {
+        String simulatedInput = "1\n1\nmaybe\nn\n";
+        simulateInputAndRun(simulatedInput);
+    }
+
+    /**
+     * Test input with only one cup and then finish
+     */
+    public void testSingleCupAndFinish() {
+        String simulatedInput = "2\n1\ny\n";
+        simulateInputAndRun(simulatedInput);
+    }
+
+    /**
      * Helper method to inject input and call main
      */
     private void simulateInputAndRun(String input) {
         InputStream originalSystemIn = System.in;
+        PrintStream originalSystemOut = System.out;
+
+        // Optional: Capture output (you can assert it if needed)
+        ByteArrayOutputStream testOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(testOut));
+
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         try {
             CoffeeShop.main(new String[]{});
         } finally {
             System.setIn(originalSystemIn);
+            System.setOut(originalSystemOut);
         }
     }
 }
