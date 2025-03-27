@@ -9,18 +9,22 @@ import java.util.logging.Logger;
 public class CoffeeShop {
     private static final Logger LOGGER = Logger.getLogger(CoffeeShop.class.getName());
 
+    // Define constants to avoid repeated literals (Sonar Maintainability)
+    private static final String AMERICANO = "Americano";
+    private static final String MOCHA = "Mocha";
+    private static final String ICETEA = "Ice Tea";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         double totalAmount = 0;
 
         String currentDate = LocalDate.now().toString();
-        LOGGER.info("Input " + currentDate + " stock");
+        LOGGER.info(String.format("Input %s stock", currentDate));
 
-        
         Map<String, Integer> stock = new HashMap<>();
-        stock.put("Americano", getStockInput(scanner, "Americano"));
-        stock.put("Mocha", getStockInput(scanner, "Mocha"));
-        stock.put("Ice Tea", getStockInput(scanner, "Ice Tea"));
+        stock.put(AMERICANO, getStockInput(scanner, AMERICANO));
+        stock.put(MOCHA, getStockInput(scanner, MOCHA));
+        stock.put(ICETEA, getStockInput(scanner, ICETEA));
 
         LOGGER.info("Welcome to the shop!");
 
@@ -32,23 +36,23 @@ public class CoffeeShop {
             LOGGER.info("3. Ice Tea - $2.5");
 
             String choice = scanner.next();
-            String selectedCoffee = null;
-            double price = 0.0;
+            String selectedCoffee;
+            double price;
 
             switch (choice.toLowerCase()) {
                 case "1":
                 case "americano":
-                    selectedCoffee = "Americano";
+                    selectedCoffee = AMERICANO;
                     price = 3.5;
                     break;
                 case "2":
                 case "mocha":
-                    selectedCoffee = "Mocha";
+                    selectedCoffee = MOCHA;
                     price = 4.0;
                     break;
                 case "3":
                 case "ice tea":
-                    selectedCoffee = "Ice Tea";
+                    selectedCoffee = ICETEA;
                     price = 2.5;
                     break;
                 default:
@@ -56,84 +60,69 @@ public class CoffeeShop {
                     continue;
             }
 
-            
             LOGGER.info("How many cups?");
             int quantity = getValidIntInput(scanner);
 
-            
             if (stock.get(selectedCoffee) < quantity) {
-                LOGGER.warning("Not enough stock! Available: " + stock.get(selectedCoffee));
+                LOGGER.warning(String.format("Not enough stock! Available: %d", stock.get(selectedCoffee)));
                 continue;
             }
 
-            
             double subtotal = calculateTotalAmount(price, quantity);
             totalAmount += subtotal;
             stock.put(selectedCoffee, stock.get(selectedCoffee) - quantity);
 
-            LOGGER.info("Added: " + quantity + " cups of " + selectedCoffee + " - $" + subtotal);
+            LOGGER.info(String.format("Added: %d cups of %s - $%.2f", quantity, selectedCoffee, subtotal));
 
-            
-            while (true) {
+            // Simplified the break/continue logic
+            boolean validAnswer = false;
+            while (!validAnswer) {
                 LOGGER.info("Do you want to finish shopping? (y/n)");
                 String finish = scanner.next();
                 if (finish.equalsIgnoreCase("y")) {
                     shopping = false;
-                    break;
+                    validAnswer = true;
                 } else if (finish.equalsIgnoreCase("n")) {
-                    break;
+                    validAnswer = true;
                 } else {
                     LOGGER.warning("Invalid input. Please enter 'y' or 'n'.");
                 }
             }
         }
 
-        LOGGER.info("Total amount: $" + totalAmount);
+        LOGGER.info(String.format("Total amount: $%.2f", totalAmount));
         LOGGER.info("Thank you for shopping!");
         scanner.close();
     }
 
-   
     public static double calculateTotalAmount(double price, int quantity) {
         return price * quantity;
     }
 
-   
     private static int getStockInput(Scanner scanner, String coffeeType) {
-        int stock;
         while (true) {
-            LOGGER.info(coffeeType + ":");
+            LOGGER.info(String.format("%s:", coffeeType));
             try {
-                stock = scanner.nextInt();
-                if (stock >= 0) {
-                    break;
-                } else {
-                    LOGGER.warning("Stock cannot be negative. Please enter again.");
-                }
+                int stock = scanner.nextInt();
+                if (stock >= 0) return stock;
+                LOGGER.warning("Stock cannot be negative. Please enter again.");
             } catch (Exception e) {
                 LOGGER.warning("Invalid input! Please enter a valid number.");
-                scanner.next(); 
+                scanner.next();
             }
         }
-        return stock;
     }
 
-   
     private static int getValidIntInput(Scanner scanner) {
-        int value;
         while (true) {
             try {
-                value = scanner.nextInt();
-                if (value > 0) {
-                    break;
-                } else {
-                    LOGGER.warning("Please enter a valid positive number.");
-                }
+                int value = scanner.nextInt();
+                if (value > 0) return value;
+                LOGGER.warning("Please enter a valid positive number.");
             } catch (Exception e) {
                 LOGGER.warning("Invalid input! Please enter a valid number.");
-                scanner.next(); 
+                scanner.next();
             }
         }
-        return value;
     }
 }
