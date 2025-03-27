@@ -49,6 +49,22 @@ public class CoffeeShopTest extends TestCase {
         String simulatedInput = "10\n10\n10\n1\n1\ny\n2\n2\ny\n3\n1\nn\n";
         simulateInputAndRun(simulatedInput);
     }
+    
+    public void testMochaAndExitWithN() {
+        simulateInputAndRun("2025-03-26\n10\n10\n10\n2\n1\nn\n1\n1\ny\n");
+    }
+
+    public void testInvalidFinishInput() {
+        simulateInputAndRun("2025-03-26\n10\n10\n10\n1\n1\nmaybe\ny\n");
+    }
+
+    public void testInvalidStockInput() {
+        simulateInputAndRun("abc\n10\n10\n10\n1\n1\ny\n");
+    }
+
+    public void testInvalidQuantityInput() {
+        simulateInputAndRun("2025-03-26\n10\n10\n10\n1\nabc\n1\ny\n");
+    }
 
     /**
      * Simulates user attempting to buy more than stock allows,
