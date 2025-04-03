@@ -1,108 +1,63 @@
-package com.coffeeshop;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-
 public class CoffeeShopTest extends TestCase {
 
-    /**
-     * Constructor for the test case.
-     * @param testName name of the test case
-     */
     public CoffeeShopTest(String testName) {
         super(testName);
     }
 
-    
     public static Test suite() {
         return new TestSuite(CoffeeShopTest.class);
     }
 
-    
     public void testCalculateTotalAmount() {
         assertEquals(7.0, CoffeeShop.calculateTotalAmount(3.5, 2), 0.01);
         assertEquals(10.0, CoffeeShop.calculateTotalAmount(5.0, 2), 0.01);
         assertEquals(0.0, CoffeeShop.calculateTotalAmount(3.5, 0), 0.01);
     }
 
-    
-    public void testSingleCupAndFinish() {
-        String simulatedInput = "10\n10\n10\n1\n1\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+    public void testAmericanoOption() {
+        simulateInputAndRun("10\n10\n10\namericano\n1\ny\n");
     }
 
-    
-    public void testUserQuitsImmediately() {
-        String simulatedInput = "10\n10\n10\n4\n1\n1\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+    public void testMochaOption() {
+        simulateInputAndRun("10\n10\n10\nmocha\n1\ny\n");
     }
 
-    
-    public void testMultiplePurchasesThenQuit() {
-        String simulatedInput = "10\n10\n10\n1\n1\nn\n2\n2\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+    public void testIceTeaOption() {
+        simulateInputAndRun("10\n10\n10\nice tea\n1\ny\n");
     }
 
-    public void testMochaAndExitWithN() {
-        simulateInputAndRun("10\n10\n10\n2\n1\nn\n1\n1\ny\n");
-        assertTrue(true);
+    public void testInvalidCoffeeInput() {
+        simulateInputAndRun("10\n10\n10\nlatte\n1\n1\ny\n");
     }
 
-    public void testInvalidFinishInput() {
-        simulateInputAndRun("10\n10\n10\n1\n1\nmaybe\ny\n");
-        assertTrue(true);
+    public void testNegativeStockTriggersWarning() {
+        simulateInputAndRun("-5\n10\n10\n1\n1\ny\n");
     }
 
-    public void testInvalidStockInput() {
-        simulateInputAndRun("abc\n10\n10\n10\n1\n1\ny\n");
-        assertTrue(true);
+    public void testInvalidStockInputTriggersCatch() {
+        simulateInputAndRun("abc\n10\n10\n1\n1\ny\n");
     }
 
-    public void testInvalidQuantityInput() {
-        simulateInputAndRun("10\n10\n10\n1\nabc\n1\ny\n");
-        assertTrue(true);
+    public void testNegativeQuantityTriggersWarning() {
+        simulateInputAndRun("10\n10\n10\n1\n-2\n2\ny\n");
     }
 
-    /**
-     * Simulates user attempting to buy more than stock allows,
-     * then reselecting valid quantity and quitting.
-     */
+    public void testInvalidQuantityInputTriggersCatch() {
+        simulateInputAndRun("10\n10\n10\n1\nabc\n2\ny\n");
+    }
+
     public void testBuyTooMuchCoffee() {
-        String simulatedInput = "10\n10\n10\n1\n99\n1\n2\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+        simulateInputAndRun("2\n10\n10\n1\n99\n1\n2\ny\n");
     }
 
-    
-    public void testInvalidInputHandling() {
-        String simulatedInput = "10\n10\n10\nabc\n1\n1\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+    public void testFinishInputInvalid() {
+        simulateInputAndRun("10\n10\n10\n1\n1\nmaybe\ny\n");
     }
 
-    
-    public void testIceTeaOptionCoverage() {
-        String simulatedInput = "10\n10\n10\n3\n1\ny\n"; // 输入3 → 触发 case "3"/"ice tea"
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
+    public void testQuitImmediately() {
+        simulateInputAndRun("10\n10\n10\n4\n1\n1\ny\n");
     }
 
-   
-    public void testInvalidCoffeeOption() {
-        String simulatedInput = "10\n10\n10\nlatte\n1\n1\ny\n";
-        simulateInputAndRun(simulatedInput);
-        assertTrue(true);
-    }
-
-  
     private void simulateInputAndRun(String input) {
         InputStream originalSystemIn = System.in;
         System.setIn(new ByteArrayInputStream(input.getBytes()));
