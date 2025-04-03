@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CoffeeShop {
@@ -17,8 +18,9 @@ public class CoffeeShop {
         Scanner scanner = new Scanner(System.in);
         double totalAmount = 0;
 
+        // * Conditional logging: Invoke method(s) only conditionally
         String currentDate = LocalDate.now().toString();
-        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+        if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info(String.format("Input %s stock", currentDate));
         }
 
@@ -39,32 +41,22 @@ public class CoffeeShop {
             String choice = scanner.next();
             String selectedCoffee = null;
             double price = 0.0;
-            boolean validChoice = true;
 
-            switch (choice.toLowerCase()) {
-                case "1":
-                case "americano":
-                    selectedCoffee = AMERICANO;
-                    price = 3.5;
-                    break;
-                case "2":
-                case "mocha":
-                    selectedCoffee = MOCHA;
-                    price = 4.0;
-                    break;
-                case "3":
-                case "ice tea":
-                    selectedCoffee = ICETEA;
-                    price = 2.5;
+            // * ues if else
+            if ("1".equalsIgnoreCase(choice) || "americano".equalsIgnoreCase(choice)) {
+                selectedCoffee = AMERICANO;
+                price = 3.5;
+            } else if ("2".equalsIgnoreCase(choice) || "mocha".equalsIgnoreCase(choice)) {
+                selectedCoffee = MOCHA;
+                price = 4.0;
+            } else if ("3".equalsIgnoreCase(choice) || "ice tea".equalsIgnoreCase(choice)) {
+                selectedCoffee = ICETEA;
+                price = 2.5;
+                if (LOGGER.isLoggable(Level.INFO)) {
                     LOGGER.info("Ice Tea selected.");
-                    break;
-                default:
-                    LOGGER.warning("Invalid choice. Please try again.");
-                    validChoice = false;
-                    break;
-            }
-
-            if (!validChoice) {
+                }
+            } else {
+                LOGGER.warning("Invalid choice. Please try again.");
                 continue;
             }
 
@@ -72,7 +64,8 @@ public class CoffeeShop {
             int quantity = getValidIntInput(scanner);
 
             if (stock.get(selectedCoffee) < quantity) {
-                if (LOGGER.isLoggable(java.util.logging.Level.WARNING)) {
+                // Conditional logging: Invoke method(s) only conditionally
+                if (LOGGER.isLoggable(Level.WARNING)) {
                     LOGGER.warning(String.format("Not enough stock! Available: %d", stock.get(selectedCoffee)));
                 }
                 continue;
@@ -82,40 +75,39 @@ public class CoffeeShop {
             totalAmount += subtotal;
             stock.put(selectedCoffee, stock.get(selectedCoffee) - quantity);
 
-            if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            if (LOGGER.isLoggable(Level.INFO)) {
                 LOGGER.info(String.format("Added: %d cups of %s - $%.2f", quantity, selectedCoffee, subtotal));
             }
 
-            boolean validAnswer = false;
-            while (!validAnswer) {
+            LOGGER.info("Do you want to finish shopping? (y/n)");
+            String finish = scanner.next();
+            while (!finish.equalsIgnoreCase("y") && !finish.equalsIgnoreCase("n")) {
+                LOGGER.warning("Invalid input. Please enter 'y' or 'n'.");
                 LOGGER.info("Do you want to finish shopping? (y/n)");
-                String finish = scanner.next();
-                if (finish.equalsIgnoreCase("y")) {
-                    shopping = false;
-                    validAnswer = true;
-                } else if (finish.equalsIgnoreCase("n")) {
-                    validAnswer = true;
-                } else {
-                    LOGGER.warning("Invalid input. Please enter 'y' or 'n'.");
-                }
+                finish = scanner.next();
+            }
+
+            if (finish.equalsIgnoreCase("y")) {
+                shopping = false;
             }
         }
 
-        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+        if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info(String.format("Total amount: $%.2f", totalAmount));
         }
         LOGGER.info("Thank you for shopping!");
         scanner.close();
     }
 
-    //Test the calculation of total amount.
     public static double calculateTotalAmount(double price, int quantity) {
         return price * quantity;
     }
 
     private static int getStockInput(Scanner scanner, String coffeeType) {
         while (true) {
-            LOGGER.info(String.format("%s:", coffeeType));
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info(String.format("%s:", coffeeType));  //  Invoke String.format conditionally
+            }
             try {
                 int stock = scanner.nextInt();
                 if (stock >= 0) return stock;
