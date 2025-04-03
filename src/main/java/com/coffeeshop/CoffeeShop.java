@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 public class CoffeeShop {
     private static final Logger LOGGER = Logger.getLogger(CoffeeShop.class.getName());
 
-    // Define constants to avoid repeated literals (Sonar Maintainability)
     private static final String AMERICANO = "Americano";
     private static final String MOCHA = "Mocha";
     private static final String ICETEA = "Ice Tea";
@@ -19,7 +18,9 @@ public class CoffeeShop {
         double totalAmount = 0;
 
         String currentDate = LocalDate.now().toString();
-        LOGGER.info(String.format("Input %s stock", currentDate));
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            LOGGER.info(String.format("Input %s stock", currentDate));
+        }
 
         Map<String, Integer> stock = new HashMap<>();
         stock.put(AMERICANO, getStockInput(scanner, AMERICANO));
@@ -36,8 +37,9 @@ public class CoffeeShop {
             LOGGER.info("3. Ice Tea - $2.5");
 
             String choice = scanner.next();
-            String selectedCoffee;
-            double price;
+            String selectedCoffee = null;
+            double price = 0.0;
+            boolean validChoice = true;
 
             switch (choice.toLowerCase()) {
                 case "1":
@@ -58,14 +60,21 @@ public class CoffeeShop {
                     break;
                 default:
                     LOGGER.warning("Invalid choice. Please try again.");
-                    continue;
+                    validChoice = false;
+                    break;
+            }
+
+            if (!validChoice) {
+                continue;
             }
 
             LOGGER.info("How many cups?");
             int quantity = getValidIntInput(scanner);
 
             if (stock.get(selectedCoffee) < quantity) {
-                LOGGER.warning(String.format("Not enough stock! Available: %d", stock.get(selectedCoffee)));
+                if (LOGGER.isLoggable(java.util.logging.Level.WARNING)) {
+                    LOGGER.warning(String.format("Not enough stock! Available: %d", stock.get(selectedCoffee)));
+                }
                 continue;
             }
 
@@ -73,7 +82,9 @@ public class CoffeeShop {
             totalAmount += subtotal;
             stock.put(selectedCoffee, stock.get(selectedCoffee) - quantity);
 
-            LOGGER.info(String.format("Added: %d cups of %s - $%.2f", quantity, selectedCoffee, subtotal));
+            if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+                LOGGER.info(String.format("Added: %d cups of %s - $%.2f", quantity, selectedCoffee, subtotal));
+            }
 
             boolean validAnswer = false;
             while (!validAnswer) {
@@ -90,11 +101,14 @@ public class CoffeeShop {
             }
         }
 
-        LOGGER.info(String.format("Total amount: $%.2f", totalAmount));
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            LOGGER.info(String.format("Total amount: $%.2f", totalAmount));
+        }
         LOGGER.info("Thank you for shopping!");
         scanner.close();
     }
 
+    //Test the calculation of total amount.
     public static double calculateTotalAmount(double price, int quantity) {
         return price * quantity;
     }
@@ -104,11 +118,8 @@ public class CoffeeShop {
             LOGGER.info(String.format("%s:", coffeeType));
             try {
                 int stock = scanner.nextInt();
-                if (stock >= 0) {
-                    return stock;
-                } else {
-                    LOGGER.warning("Stock cannot be negative. Please enter again.");
-                }
+                if (stock >= 0) return stock;
+                LOGGER.warning("Stock cannot be negative. Please enter again.");
             } catch (Exception e) {
                 LOGGER.warning("Invalid input! Please enter a valid number.");
                 scanner.next();
