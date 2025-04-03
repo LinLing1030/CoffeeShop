@@ -54,6 +54,7 @@ public class CoffeeShop {
                 case "ice tea":
                     selectedCoffee = ICETEA;
                     price = 2.5;
+                    LOGGER.info("Ice Tea selected.");
                     break;
                 default:
                     LOGGER.warning("Invalid choice. Please try again.");
@@ -74,7 +75,6 @@ public class CoffeeShop {
 
             LOGGER.info(String.format("Added: %d cups of %s - $%.2f", quantity, selectedCoffee, subtotal));
 
-            // Simplified the break/continue logic
             boolean validAnswer = false;
             while (!validAnswer) {
                 LOGGER.info("Do you want to finish shopping? (y/n)");
@@ -104,8 +104,11 @@ public class CoffeeShop {
             LOGGER.info(String.format("%s:", coffeeType));
             try {
                 int stock = scanner.nextInt();
-                if (stock >= 0) return stock;
-                LOGGER.warning("Stock cannot be negative. Please enter again.");
+                if (stock >= 0) {
+                    return stock;
+                } else {
+                    LOGGER.warning("Stock cannot be negative. Please enter again.");
+                }
             } catch (Exception e) {
                 LOGGER.warning("Invalid input! Please enter a valid number.");
                 scanner.next();
